@@ -1,3 +1,0 @@
-# console.hetzner.cloud
-- torvalds.lino.pw:***REMOVED*** [torvalds, reboot_3am]
-- foucault.lino.pw:***REMOVED*** [foucault, reboot_3am]

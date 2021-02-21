@@ -1,6 +1,0 @@
-[submodule "inventory"]
-	path = inventory
-	url = git@git.lino.pw:linozen/ansible-inventory.git
-[submodule "roles/borgbackup"]
-	path = roles/borgbackup
-	url = https://github.com/borgbase/ansible-role-borgbackup.git
