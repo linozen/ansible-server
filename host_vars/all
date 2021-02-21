@@ -7,3 +7,12 @@ unattended_automatic_reboot: true
 unattended_verbose: 1
 # unattended_mail: 'system-monitoring@lists.fsfe.org'
 unattended_mail_only_on_error: true
+
+# firewall
+firewall_allowed_tcp_ports:
+  - "80"
+  - "443"
+  - "***REMOVED***"
+firewall_allowed_udp_ports: []
+firewall_disable_firewalld: true
+firewall_disable_ufw: true
