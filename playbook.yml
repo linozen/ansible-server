@@ -1,4 +1,10 @@
 - hosts: all
+  remote_user: deployr
 
   roles:
-  - role: borgbackup
+  # backup
+  - borgbackup
+  # automatic updates/upgrades
+  - unattended-upgrades
+  - configure-upgrade-timers
+  # - configure-update-only-timers

@@ -1,0 +1,2 @@
+---
+unattended_automatic_reboot_time: '3:{{ 30 | random(seed=inventory_hostname) }}'
