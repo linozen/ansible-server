@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily apt download activities
+
+[Timer]
+OnCalendar=
+OnCalendar={{ apt_update_time | default('1:00') }}
+RandomizedDelaySec=30m
+
+[Install]
+WantedBy=timers.target

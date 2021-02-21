@@ -1,0 +1,54 @@
+---
+- name: ensure a directory exists
+  file:
+    path: /etc/systemd/system/apt-daily.timer.d
+    state: directory
+
+- name: ensure a directory exists
+  file:
+    path: /etc/systemd/system/apt-daily-upgrade.timer.d
+    state: directory
+
+- name: find old files (20auto*) in /etc/apt/apt.conf.d
+  find:
+    paths: /etc/apt/apt.conf.d
+    patterns: 20auto*
+  register: files_to_delete
+
+- name: delete old files (20auto*) in /etc/apt/apt.conf.d
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ files_to_delete.files }}"
+
+- name: Change the apt-daily timer
+  template:
+    src: apt-daily.j2
+    dest: /etc/systemd/system/apt-daily.timer.d/override.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Change the apt-daily-upgrade timer
+  template:
+    src: apt-daily-upgrade.j2
+    dest: /etc/systemd/system/apt-daily-upgrade.timer.d/override.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Reload systemd daemon
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: Restart apt-daily.timer
+  ansible.builtin.systemd:
+    name: apt-daily.timer
+    state: restarted
+    enabled: yes
+
+- name: Restart apt-daily-upgrade.timer
+  ansible.builtin.systemd:
+    name: apt-daily-upgrade.timer
+    state: restarted
+    enabled: yes
