@@ -1,1 +1,11 @@
+# unattended-upgrades
+unattended_origins_patterns:
+  - 'origin=*' # upgrade everything
+  - 'origin=Docker,label=Docker CE' # docker
+unattended_autoclean_interval: 21
+unattended_download_upgradeable: 1
+unattended_automatic_reboot: true
+unattended_verbose: 1
+
+# firewall
 firewall_flush_rules_and_chains: false
