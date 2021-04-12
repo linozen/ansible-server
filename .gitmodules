@@ -10,3 +10,6 @@
 [submodule "roles/firewall"]
 	path = roles/firewall
 	url = https://github.com/geerlingguy/ansible-role-firewall.git
+[submodule "roles/gitea"]
+	path = roles/gitea
+	url = https://github.com/thomas-maurice/ansible-role-gitea.git
