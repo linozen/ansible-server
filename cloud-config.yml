@@ -1,0 +1,56 @@
+#https://community.hetzner.com/tutorials/debian-base-configuration-docker
+# --- copy from line below
+#cloud-config
+users:
+  - name: deployr
+    ssh-authorized_keys:
+    - ***REMOVED***
+    - ***REMOVED***
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups:
+      - sudo
+      - docker
+    shell: /bin/bash
+package_upgrade: true
+packages:
+  - ufw
+  - vim
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg2
+  - software-properties-common
+runcmd:
+  - curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+  - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+  - apt-get update -y
+  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose
+  - ufw default deny incoming
+  - ufw allow ***REMOVED***/tcp
+  - echo "y" | ufw enable
+write_files:
+  - path: /etc/ssh/sshd_config
+    content: |
+      Protocol 2
+      Port ***REMOVED***
+      HostKey /etc/ssh/ssh_host_rsa_key
+      HostKey /etc/ssh/ssh_host_ecdsa_key
+      HostKey /etc/ssh/ssh_host_ed25519_key
+      UsePrivilegeSeparation yes
+      KeyRegenerationInterval 3600
+      SyslogFacility AUTH
+      LogLevel INFO
+      PermitRootLogin no
+      StrictModes yes
+      IgnoreRhosts yes
+      RhostsRSAAuthentication no
+      HostbasedAuthentication no
+      PubkeyAuthentication yes
+      PasswordAuthentication no
+      ChallengeResponseAuthentication no
+      UsePAM yes
+      X11Forwarding no
+      PrintMotd no
+      AcceptEnv LANG LC_*
+      Subsystem	sftp	/usr/lib/openssh/sftp-server
+      AllowUsers deployr
