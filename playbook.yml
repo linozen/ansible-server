@@ -11,10 +11,13 @@
   # - configure-update-only-timers
 
   # firewall
-  - firewall
+  # - firewall
 
   # rp
   # - caddy
 
   # gitea
   # - gitea
+
+  # drone
+  - drone
