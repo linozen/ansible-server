@@ -1,0 +1,8 @@
+.DS_Store
+.idea
+*.log
+tmp/
+.cloud-config/
+
+/cloud-config/docker.yml
+/cloud-config/minimal.yml
