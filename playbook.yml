@@ -3,12 +3,18 @@
 
   roles:
   # backup
-  - borgbackup
+  # - borgbackup
 
   # automatic updates/upgrades
-  - unattended-upgrades
-  - configure-upgrade-timers
-  - configure-update-only-timers
+  # - unattended-upgrades
+  # - configure-upgrade-timers
+  # - configure-update-only-timers
 
   # firewall
   - firewall
+
+  # rp
+  # - caddy
+
+  # gitea
+  # - gitea
