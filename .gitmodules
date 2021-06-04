@@ -4,6 +4,9 @@
 [submodule "roles/ansible-hardening"]
 	path = roles/ansible-hardening
 	url = https://github.com/linozen/ansible-hardening.git
+[submodule "roles/ansible-fail2ban"]
+	path = roles/ansible-fail2ban
+	url = https://github.com/linozen/ansible-fail2ban.git
 [submodule "roles/ansible-borgbackup"]
 	path = roles/ansible-borgbackup
 	url = https://github.com/linozen/ansible-borgbackup.git
@@ -19,6 +22,3 @@
 [submodule "roles/ansible-caddy"]
 	path = roles/ansible-caddy
 	url = https://github.com/linozen/ansible-caddy.git
-[submodule "roles/ansible-fail2ban"]
-	path = roles/ansible-fail2ban
-	url = https://github.com/linozen/ansible-fail2ban.git
