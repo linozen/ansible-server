@@ -19,3 +19,6 @@
 [submodule "roles/ansible-caddy"]
 	path = roles/ansible-caddy
 	url = https://github.com/linozen/ansible-caddy.git
+[submodule "roles/ansible-fail2ban"]
+	path = roles/ansible-fail2ban
+	url = https://github.com/linozen/ansible-fail2ban.git
