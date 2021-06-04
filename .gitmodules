@@ -4,9 +4,6 @@
 [submodule "roles/ansible-hardening"]
 	path = roles/ansible-hardening
 	url = https://github.com/linozen/ansible-hardening.git
-[submodule "roles/borgbackup"]
-	path = roles/borgbackup
-	url = https://github.com/borgbase/ansible-role-borgbackup.git
 [submodule "roles/gitea"]
 	path = roles/gitea
 	url = https://github.com/thomas-maurice/ansible-role-gitea.git
