@@ -7,6 +7,9 @@
 [submodule "roles/ansible-borgbackup"]
 	path = roles/ansible-borgbackup
 	url = https://github.com/linozen/ansible-borgbackup.git
+[submodule "roles/ansible-docker-rootless"]
+	path = roles/ansible-docker-rootless
+	url = https://github.com/linozen/ansible-docker-rootless.git
 [submodule "roles/caddy"]
 	path = roles/caddy
 	url = https://github.com/caddy-ansible/caddy-ansible.git
@@ -16,6 +19,6 @@
 [submodule "roles/ansible-gitea"]
 	path = roles/ansible-gitea
 	url = https://github.com/linozen/ansible-gitea.git
-[submodule "roles/ansible-docker-rootless"]
-	path = roles/ansible-docker-rootless
-	url = https://github.com/linozen/ansible-docker-rootless.git
+[submodule "roles/ansible-caddy"]
+	path = roles/ansible-caddy
+	url = https://github.com/linozen/ansible-caddy.git
