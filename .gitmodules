@@ -16,3 +16,6 @@
 [submodule "roles/ansible-gitea"]
 	path = roles/ansible-gitea
 	url = https://github.com/linozen/ansible-gitea.git
+[submodule "roles/ansible-docker-rootless"]
+	path = roles/ansible-docker-rootless
+	url = https://github.com/linozen/ansible-docker-rootless.git
