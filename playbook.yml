@@ -1,23 +1,95 @@
-- hosts: all
-  remote_user: deployr
+---
+- name: Install most basic packages
+  hosts: all
+  remote_user: root
+  tasks:
+    - name: install packages
+      apt:
+        name: ["git", "sudo", "rsync", "curl", "vim"]
+        state: present
+  tags:
+    - packages
 
-  roles:
-  # backup
-  # - borgbackup
+- name: Harden the server
+  hosts: all
+  remote_user: root
+  tasks:
+    - name: run roles/ansible-hardening
+      include_role:
+        name: ansible-hardening
+  tags:
+    - hardening
 
-  # automatic updates/upgrades
-  # - unattended-upgrades
-  # - configure-upgrade-timers
-  # - configure-update-only-timers
+- name: Configure fail2ban
+  hosts: all
+  remote_user: root
+  tasks:
+    - name: run roles/ansible-fail2ban
+      include_role:
+        name: ansible-fail2ban
+  tags:
+    - hardening
+    - fail2ban
 
-  # firewall
-  # - firewall
+- name: Apply unattended-upgrades
+  hosts: all
+  remote_user: root
+  tasks:
+    - name: run roles/ansible-unattended-upgrades
+      include_role:
+        name: ansible-unattended-upgrades
+  tags:
+    - unattended-upgrades
 
-  # rp
-  # - caddy
+- name: Enable backups with borgbase
+  hosts: all
+  remote_user: root
+  tasks:
+    - name: run roles/ansible-borgbackup
+      include_role:
+        name: ansible-borgbackup
+  tags:
+    - backup
 
-  # gitea
-  # - gitea
+- name: Install docker (rootless)
+  hosts: all
+  remote_user: root
+  tasks:
+    - name: run roles/ansible-docker-rootless
+      include_role:
+        name: ansible-docker-rootless
+  tags:
+    - docker
 
-  # drone
-  - drone
+- name: Install docker-compose
+  hosts: all
+  remote_user: root
+  tasks:
+    - name: run roles/ansible-docker-compose
+      include_role:
+        name: ansible-docker-compose
+  tags:
+    - docker
+    - docker-compose
+
+- name: Install traefik
+  hosts: all
+  remote_user: root
+  tasks:
+    - name: run roles/ansible-traefik-rp
+      include_role:
+        name: ansible-traefik-rp
+  tags:
+    - docker
+    - traefik
+
+- name: Install drone-runner
+  hosts: all
+  remote_user: root
+  tasks:
+    - name: run roles/ansible-drone-runner
+      include_role:
+        name: ansible-drone-runner
+  tags:
+    - docker
+    - drone
