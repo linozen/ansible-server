@@ -1,0 +1,84 @@
+---
+- name: register "{{ docker_user }}" info
+  become: "yes"
+  user:
+    name: "{{ docker_user }}"
+  check_mode: "yes"
+  register: docker_user_info
+
+- name: Ensures traefik dir exists
+  become: "yes"
+  become_user: "{{ docker_user }}"
+  file:
+    path: "{{ traefik_dir }}"
+    state: directory
+    mode: 0600
+
+- name: Ensures acme.json file exists
+  file:
+    path: "{{ traefik_dir }}/acme.json"
+    state: touch
+    mode: 0600
+    owner: "{{ docker_user_info.name }}"
+    group: "{{ docker_user_info.group }}"
+
+- name: Adding dynamic.yml file
+  template:
+    src: dynamic.yml.j2
+    dest: "{{ traefik_dir }}/dynamic.yml"
+    mode: 0600
+    owner: "{{ docker_user_info.name }}"
+    group: "{{ docker_user_info.group }}"
+
+- name: Adding traefik.yml file
+  template:
+    src: traefik.yml.j2
+    dest: "{{ traefik_dir }}/traefik.yml"
+    mode: 0600
+    owner: "{{ docker_user_info.name }}"
+    group: "{{ docker_user_info.group }}"
+
+- name: Create the web network
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ docker_user_info.uid }}"
+    PATH: "{{ docker_user_info.home }}/bin:{{ ansible_env.PATH }}"
+    DOCKER_HOST: "unix:///run/user/{{ docker_user_info.uid }}/docker.sock"
+  block:
+    - name: web network
+      become: "yes"
+      become_user: "{{ docker_user }}"
+      docker_network:
+        name: web
+
+- name: Create the traefik container
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ docker_user_info.uid }}"
+    PATH: "{{ docker_user_info.home }}/bin:{{ ansible_env.PATH }}"
+    DOCKER_HOST: "unix:///run/user/{{ docker_user_info.uid }}/docker.sock"
+  block:
+    - name: traefik container
+      become: "yes"
+      become_user: "{{ docker_user }}"
+      docker_container:
+        name: traefik
+        image: "{{ traefik_image }}"
+        restart_policy: unless-stopped
+        recreate: true
+        networks:
+          - name: web
+        ports:
+          - "80:80"
+          - "443:443"
+        volumes:
+          - "{{ traefik_dir }}/traefik.yml:/etc/traefik/traefik.yml"
+          - "{{ traefik_dir }}/dynamic.yml:/etc/traefik/dynamic.yml"
+          - "{{ traefik_dir }}/acme.json:/etc/traefik/acme.json"
+          - "/var/run/user/{{ docker_user_info.uid }}/docker.sock:/var/run/docker.sock"
+        labels:
+          traefik.enable: "true"
+          traefik.http.routers.traefik.rule: "Host(`{{ traefik_api_url }}`)"
+          traefik.http.routers.traefik.entrypoints: "https"
+          traefik.http.routers.traefik.tls.certresolver: "letsencrypt"
+          traefik.http.routers.traefik.service: "api@internal"
+          traefik.http.routers.traefik.middlewares: "auth"
+          traefik.http.middlewares.auth.basicauth.users: "{{ traefik_api_user }}:{{ '%s' | format(traefik_api_password) | password_hash('md5') }}"

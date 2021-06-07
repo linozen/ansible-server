@@ -1,0 +1,43 @@
+---
+- name: Install python3-pip
+  apt:
+    name: python3-pip
+    state: present
+
+- name: Install docker module for Python
+  pip:
+    name: docker
+    executable: pip3
+
+- name: Run docker-compose
+  community.docker.docker_compose:
+    project_name: drone
+    definition:
+      version: "3.3"
+      services:
+        drone_server:
+          image: drone/drone:1
+          restart: unless-stopped
+          ports:
+            - "80:80"
+            - "443:443"
+          volumes:
+            - "/etc/localtime:/etc/localtime:ro"
+            - "/etc/timezone:/etc/timezone:ro"
+            - "/home/{{ ansible_user }}/drone/data:/data"
+          environment:
+            - "DRONE_TLS_AUTOCERT=true"
+            - "USER_UID=61001"
+            - "USER_GID=61000"
+            - "DRONE_GITEA_SERVER=https://git.sehn.dev"
+            - "DRONE_GITEA_CLIENT_ID={{ gitea_client_id }}"
+            - "DRONE_GITEA_CLIENT_SECRET={{ gitea_client_secret }}"
+            - "DRONE_RPC_SECRET={{ drone_rpc_secret }}"
+            - "DRONE_SERVER_HOST=ci.sehn.dev"
+            - "DRONE_SERVER_PROTO=https"
+            - "DRONE_USER_CREATE=username:linozen,admin:true"
+  register: output
+
+- name: Debugging ...
+  ansible.builtin.debug:
+    var: output
